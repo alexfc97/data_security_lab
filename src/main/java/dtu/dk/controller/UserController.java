@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/password")
@@ -32,6 +31,7 @@ public class UserController {
 
     @GetMapping("/AuthenticateUser/{username}/{password}")
     public Boolean authenticateUser(@PathVariable(value = "username") String username, @PathVariable(value = "password") String password){
-        return userrepository.find
+        User user = new User(username, password);
+        return user.equals(userrepository.findById(username));
     }
 }
