@@ -18,8 +18,6 @@ public class Server {
         Registry registry = LocateRegistry.createRegistry(7070);
         registry.rebind("print-service", new PrintService());
 
-        final String secretKey  = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
-
         User user1 = new User();
         user1.setUsername("Alexander");
         user1.setPassword(BCrypt.hashpw("ThisIsThePasswordForAlexander",BCrypt.gensalt()));
@@ -46,15 +44,11 @@ public class Server {
         try {
             FileWriter fileWriter = new FileWriter("userconfigfile.txt");
             for (User user: userlist) {
-                fileWriter.write(user.toString() + "\n");
+                fileWriter.write(user.getUsername() + "," + user.getPassword() + "\n");
             }
             fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(PrintService.authenticateUser("Alexander","ThisIsThePasswordForAlexander"));
-
-
-
     }
 }

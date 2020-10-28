@@ -1,5 +1,6 @@
 package dtu.dk.interfaces;
 
+import java.io.FileNotFoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -8,7 +9,7 @@ public interface IPrintService extends Remote {
     String echo(String input) throws RemoteException;
 
     // Authenticate user and generate a token
-    String authenticate(String userName, String password) throws RemoteException;
+    String authenticate(String userName, String password) throws RemoteException, FileNotFoundException;
 
     // prints file filename on the specified printer
     String print(String tkn, String filename, String printer) throws RemoteException;
