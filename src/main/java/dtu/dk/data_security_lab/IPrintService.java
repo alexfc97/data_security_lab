@@ -5,33 +5,32 @@ import java.rmi.RemoteException;
 
 public interface IPrintService extends Remote {
     // For testing purposes
-    String echo(String input) throws RemoteException;
+    String echo(String input,String jwt) throws RemoteException;
 
     // prints file filename on the specified printer
-    String print(String filename, String printer) throws RemoteException;
+    String print(String filename, String printer, String jwt) throws RemoteException;
 
     // lists the print queue for a given printer on the user's display in lines of the form <job number>   <file name>
-    String queue(String printer) throws RemoteException;
+    String queue(String printer, String jwt) throws RemoteException;
 
     // moves job to the top of the queue
-    void topQueue(String printer, int job) throws RemoteException;
+    void topQueue(String printer, int job, String jwt) throws RemoteException;
 
     // starts the print server
-    Boolean start() throws RemoteException;
+    Boolean start(String jwt) throws RemoteException;
 
     // stops the print server
-    Boolean stop() throws RemoteException;
+    Boolean stop(String jwt) throws RemoteException;
 
     // stops the print server, clears the print queue and starts the print server again
-    Boolean restart() throws RemoteException;
+    Boolean restart(String jwt) throws RemoteException;
 
     // prints status of printer on the user's display
-    String status(String printer) throws RemoteException;
+    String status(String printer, String jwt) throws RemoteException;
 
     // prints the value of the parameter on the user's display
-    String readConfig(String parameter) throws RemoteException;
+    String readConfig(String parameter, String jwt) throws RemoteException;
 
     // sets the parameter to value
-    void setConfig(String parameter, String value) throws RemoteException;
-
+    void setConfig(String parameter, String value, String jwt) throws RemoteException;
 }
