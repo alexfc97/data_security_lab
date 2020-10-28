@@ -1,12 +1,10 @@
 package dtu.dk.server;
 
 import dtu.dk.model.User;
-import dtu.dk.server.PrintService;
+import dtu.dk.server.*;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -16,24 +14,28 @@ import java.util.ArrayList;
 
 
 public class Server {
-    public static void main(String[] args) throws RemoteException {
+    public static void main(String[] args) throws RemoteException, FileNotFoundException {
         Registry registry = LocateRegistry.createRegistry(7070);
         registry.rebind("print-service", new PrintService());
+
+        final String secretKey  = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
+
         User user1 = new User();
         user1.setUsername("Alexander");
-        user1.setPassword("iuiwheguowehgfuhsekufh");
+        user1.setPassword(BCrypt.hashpw("ThisIsThePasswordForAlexander",BCrypt.gensalt()));
 
         User user2 = new User();
         user2.setUsername("Roi");
-        user2.setPassword("oaiæwehgoiæsahgoihgooeqirhg");
+        user2.setPassword(BCrypt.hashpw("ThisIsThePasswordForRoi",BCrypt.gensalt()));
 
         User user3 = new User();
         user3.setUsername("Florian");
-        user3.setPassword("sjdæfjsldkfjlksfjsdfjåw");
+        user3.setPassword(BCrypt.hashpw("ThisIsThePasswordForFlorian",BCrypt.gensalt()));
 
         User user4 = new User();
         user4.setUsername("Mohammad");
-        user4.setPassword("æspuhrnslcioeuu3498grglnj9034");
+        user4.setPassword(BCrypt.hashpw("ThisIsThePasswordForMohammad",BCrypt.gensalt()));
+
 
         ArrayList<User> userlist = new ArrayList<>();
         userlist.add(user1);
@@ -50,6 +52,7 @@ public class Server {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println(PrintService.authenticateUser("Alexander","ThisIsThePasswordForAlexander"));
 
 
 

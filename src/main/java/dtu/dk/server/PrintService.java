@@ -11,6 +11,8 @@ import dtu.dk.model.Printer;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.text.SimpleDateFormat;
@@ -27,6 +29,23 @@ public class PrintService extends UnicastRemoteObject implements IPrintService {
     public Boolean isAuthenticated = false;
 
     private ArrayList<Printer> printers = new ArrayList<Printer>();
+
+    protected static boolean authenticateUser(String username, String password) throws RemoteException, FileNotFoundException {
+        Scanner input = new Scanner(new File("userconfigfile.txt"));
+        input.useDelimiter("username:|password:");
+
+        while(input.hasNext()) {
+            String txtusername = input.next();
+            System.out.println("Username is:" + txtusername);
+            if (txtusername.equals(username)){
+                System.out.println("Has found a matching username");
+                String psw = input.next();
+                System.out.println("password is:" + psw);
+            }
+        }
+        System.out.println("Has not found a matching username");
+        return false;
+    }
 
     protected PrintService() throws RemoteException {
         super();

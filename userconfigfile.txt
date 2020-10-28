@@ -1,4 +1,0 @@
-username: 'Alexander', password: 'iuiwheguowehgfuhsekufh'
-username: 'Roi', password: 'oaiæwehgoiæsahgoihgooeqirhg'
-username: 'Florian', password: 'sjdæfjsldkfjlksfjsdfjåw'
-username: 'Mohammad', password: 'æspuhrnslcioeuu3498grglnj9034'

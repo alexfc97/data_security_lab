@@ -6,8 +6,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.Objects;
 
-@XmlRootElement
-@XmlType(propOrder = {"username", "password"})
 public class User {
 
     @Id
@@ -27,7 +25,6 @@ public class User {
         return username;
     }
 
-    @XmlElement
     public void setUsername(String username) {
         this.username = username;
     }
@@ -36,7 +33,6 @@ public class User {
         return password;
     }
 
-    @XmlElement
     public void setPassword(String password) {
         this.password = password;
     }
