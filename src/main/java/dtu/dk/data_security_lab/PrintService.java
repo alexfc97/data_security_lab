@@ -1,11 +1,27 @@
 package dtu.dk.data_security_lab;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Base64;
 
 public class PrintService extends UnicastRemoteObject implements IPrintService {
 
     public Boolean isAuthenticated = false;
+
+    byte[] secret = Base64.getDecoder().decode("Kz+C2eid/Hwtc1ueZD0og2Rpw7bCnISsBKkGFBVLzxY=");
+
+    private void Authenticate(String jwt){
+        Jws<Claims> result = Jwts.parser()
+                .setSigningKey(Keys.hmacShaKeyFor(secret))
+                .parseClaimsJws(jwt);
+
+        System.out.println(result);
+    }
 
     protected PrintService() throws RemoteException {
         super();

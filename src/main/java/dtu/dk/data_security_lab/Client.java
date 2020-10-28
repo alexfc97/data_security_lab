@@ -23,6 +23,7 @@ public class Client {
         Instant now = Instant.now();
         byte[] secret = Base64.getDecoder().decode("Kz+C2eid/Hwtc1ueZD0og2Rpw7bCnISsBKkGFBVLzxY=");
 
+
         String jwt = Jwts.builder()
                 .setSubject("Alexander Christensen")
                 .setAudience("Server")
