@@ -1,4 +1,4 @@
-package dtu.dk.data_security_lab;
+package dtu.dk.interfaces;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -14,7 +14,7 @@ public interface IPrintService extends Remote {
     String queue(String printer) throws RemoteException;
 
     // moves job to the top of the queue
-    void topQueue(String printer, int job) throws RemoteException;
+    Boolean topQueue(String printer, int job) throws RemoteException;
 
     // starts the print server
     Boolean start() throws RemoteException;

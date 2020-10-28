@@ -1,4 +1,4 @@
-package dtu.dk.data_security_lab;
+package dtu.dk.server;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;

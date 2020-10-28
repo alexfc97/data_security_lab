@@ -1,9 +1,7 @@
 package dtu.dk.model;
 
 import javax.persistence.*;
-import java.util.Iterator;
-import java.util.Objects;
-import java.util.Stack;
+import java.util.*;
 
 public class Printer {
 
@@ -30,19 +28,49 @@ public class Printer {
         return name;
     }
 
+    public Boolean print(String fileName) {
+        Iterator<PrintQueueItem> iter = queue.iterator();
+
+        while (iter.hasNext()){
+            PrintQueueItem current = iter.next();
+            if (current.getFileName().equals(fileName)) {
+                queue.remove(current);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public ArrayList<PrintQueueItem> getQueueItems() {
+        return new ArrayList<PrintQueueItem>(queue);
+    }
+
+    public String getStatus() {
+        return "Is running...";
+    }
+
     public Boolean topQueue(int jobNumber) {
         // Move to top
-        // PrintQueueItem printQueueItemToMove = queue.
+        Iterator<PrintQueueItem> iter = queue.iterator();
+        PrintQueueItem current = null;
+        while (iter.hasNext()){
+            current = iter.next();
+            if (current.getJobNumber() == jobNumber) {
+                queue.remove(current);
+                break;
+            }
+       }
 
-        //Iterator<PrintQueueItem> iter = stack.iterator();
-
-        //while (iter.hasNext()){
-        //    System.out.println(iter.next());
-       //}
+        queue.push(current);
 
         return true;
     }
 
+    public Boolean clearQueue() {
+        queue.clear();
+        return true;
+    }
 
     @Override
     public boolean equals(Object o) {

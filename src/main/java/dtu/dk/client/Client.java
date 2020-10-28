@@ -1,5 +1,6 @@
-package dtu.dk.data_security_lab;
+package dtu.dk.client;
 
+import dtu.dk.interfaces.IPrintService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -38,5 +39,15 @@ public class Client {
                 .parseClaimsJws(jwt);
 
         System.out.println(result);
+
+        System.out.println(service.queue("Printer1"));
+
+        service.topQueue("Printer1", 5);
+
+        System.out.println(service.queue("Printer1"));
+
+        System.out.println(service.print("FileName5", "Printer1"));
+
+        System.out.println(service.queue("Printer1"));
     }
 }
