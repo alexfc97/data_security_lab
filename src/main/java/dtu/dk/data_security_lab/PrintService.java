@@ -5,13 +5,18 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class PrintService extends UnicastRemoteObject implements IPrintService {
 
+    public Boolean isAuthenticated = false;
+
     protected PrintService() throws RemoteException {
         super();
     }
 
     @Override
     public String echo(String input) throws RemoteException {
-        return "From server: " + input;
+
+        String response = "From server: " + input + ", Authenticated: " + String.valueOf(isAuthenticated);
+        isAuthenticated = true;
+        return response;
     }
 
     @Override
