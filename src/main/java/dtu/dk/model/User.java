@@ -1,9 +1,13 @@
 package dtu.dk.model;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 import java.util.Objects;
 
-@Entity
+@XmlRootElement
+@XmlType(propOrder = {"username", "password"})
 public class User {
 
     @Id
@@ -23,6 +27,7 @@ public class User {
         return username;
     }
 
+    @XmlElement
     public void setUsername(String username) {
         this.username = username;
     }
@@ -31,6 +36,7 @@ public class User {
         return password;
     }
 
+    @XmlElement
     public void setPassword(String password) {
         this.password = password;
     }
@@ -47,5 +53,11 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(username, password);
+    }
+
+    @Override
+    public String toString() {
+        return "username: '" + username + '\'' +
+                ", password: '" + password + '\'';
     }
 }
