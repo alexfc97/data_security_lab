@@ -11,6 +11,7 @@ import java.util.Base64;
 
 public class PrintService extends UnicastRemoteObject implements IPrintService {
 
+
     byte[] secret = Base64.getDecoder().decode("Kz+C2eid/Hwtc1ueZD0og2Rpw7bCnISsBKkGFBVLzxY=");
 
     private void Authenticate(String jwt){
@@ -20,6 +21,7 @@ public class PrintService extends UnicastRemoteObject implements IPrintService {
 
         System.out.println(result);
     }
+
 
 
     protected PrintService() throws RemoteException {
