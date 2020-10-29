@@ -24,24 +24,12 @@ import java.util.*;
 public class PrintService extends UnicastRemoteObject implements IPrintService {
 
     private final String symKey = "Kz+C2eid/Hwtc1ueZD0og2Rpw7bCnISsBKkGFBVLzxY=";
+    private final String userFileName = "userconfigfile.txt";
 
     private Boolean isRunning = false;
     private final HashMap<String, String> config = new HashMap<String, String>();
 
     private final ArrayList<Printer> printers = new ArrayList<Printer>();
-
-    private boolean authenticateUser(String username, String password) throws FileNotFoundException {
-        Scanner input = new Scanner(new File("userconfigfile.txt"));
-        input.useDelimiter(",|\n");
-
-        while(input.hasNext()) {
-            String txtusername = input.next();
-            if (txtusername.equals(username)){
-                return BCrypt.checkpw(password,input.next());
-            }
-        }
-        return false;
-    }
 
     protected PrintService() throws RemoteException {
         super();
@@ -54,12 +42,14 @@ public class PrintService extends UnicastRemoteObject implements IPrintService {
 
     @Override
     public String echo(String input) throws RemoteException {
+        MethodCallLog(null, String.format("echo() called with param: %s", input));
 
-        return "From server: " + input;
+        return ClientResponse(null, "From server: " + input);
     }
 
     @Override
     public String authenticate(String userName, String password) throws RemoteException, FileNotFoundException {
+        MethodCallLog(null, String.format("authenticate() called with params: %s, <hidden>", userName));
 
         if (!authenticateUser(userName, password))
             return ClientResponse(null, "Invalid login.");
@@ -70,10 +60,13 @@ public class PrintService extends UnicastRemoteObject implements IPrintService {
 
     @Override
     public String print(String tkn, String filename, String printer) throws RemoteException {
+        MethodCallLog(tkn, String.format("print() called with params: %s, %s", filename, printer));
+
         if (!isTokenValid(tkn))
             return ClientResponse(null, "Token invalid.");
 
-        MethodCallLog(tkn, String.format("print() called with params: %s, %s", filename, printer));
+        if (!isRunning)
+            return ClientResponse(tkn,"Server is currently stopped.");
 
         Printer foundPrinter = null;
 
@@ -98,10 +91,13 @@ public class PrintService extends UnicastRemoteObject implements IPrintService {
 
     @Override
     public String queue(String tkn, String printer) throws RemoteException {
+        MethodCallLog(tkn, String.format("queue() called with params: %s", printer));
+
         if (!isTokenValid(tkn))
             return ClientResponse(tkn, "Token invalid.");
 
-        MethodCallLog(tkn, String.format("queue() called with params: %s", printer));
+        if (!isRunning)
+            return ClientResponse(tkn,"Server is currently stopped.");
 
         Printer foundPrinter = null;
 
@@ -130,10 +126,13 @@ public class PrintService extends UnicastRemoteObject implements IPrintService {
 
     @Override
     public Boolean topQueue(String tkn, String printer, int job) throws RemoteException {
+        MethodCallLog(tkn, String.format("topQueue() called with params: %s, %s", printer, job));
+
         if (!isTokenValid(tkn))
             return false;
 
-        MethodCallLog(tkn, String.format("topQueue() called with params: %s, %s", printer, job));
+        if (!isRunning)
+            return false;
 
         Printer foundPrinter = null;
 
@@ -152,32 +151,33 @@ public class PrintService extends UnicastRemoteObject implements IPrintService {
 
     @Override
     public Boolean start(String tkn) throws RemoteException {
+        MethodCallLog(tkn, "start() called");
+
         if (!isTokenValid(tkn))
             return false;
 
-        MethodCallLog(tkn, "start() called");
-
         isRunning = true;
-        return isRunning;
+
+        return true;
     }
 
     @Override
     public Boolean stop(String tkn) throws RemoteException {
+        MethodCallLog(tkn, "stop() called");
+
         if (!isTokenValid(tkn))
             return false;
 
-        MethodCallLog(tkn, "stop() called");
-
         isRunning = false;
-        return isRunning;
+        return true;
     }
 
     @Override
     public Boolean restart(String tkn) throws RemoteException {
+        MethodCallLog(tkn, "restart() called");
+
         if (!isTokenValid(tkn))
             return false;
-
-        MethodCallLog(tkn, "restart() called");
 
         isRunning = false;
 
@@ -193,10 +193,13 @@ public class PrintService extends UnicastRemoteObject implements IPrintService {
 
     @Override
     public String status(String tkn, String printer) throws RemoteException {
+        MethodCallLog(tkn, String.format("status() called with param: %s", printer));
+
         if (!isTokenValid(tkn))
             return ClientResponse(tkn, "Token invalid.");
 
-        MethodCallLog(tkn, String.format("status() called with param: %s", printer));
+        if (!isRunning)
+            return ClientResponse(tkn,"Server is currently stopped.");
 
         Printer foundPrinter = null;
 
@@ -215,10 +218,13 @@ public class PrintService extends UnicastRemoteObject implements IPrintService {
 
     @Override
     public String readConfig(String tkn, String parameter) throws RemoteException {
+        MethodCallLog(tkn, String.format("readConfig() called with param: %s", parameter));
+
         if (!isTokenValid(tkn))
             return ClientResponse(tkn, "Token invalid.");
 
-        MethodCallLog(tkn, String.format("readConfig() called with param: %s", parameter));
+        if (!isRunning)
+            return ClientResponse(tkn,"Server is currently stopped.");
 
         String value = config.get(parameter);
         if (value == null)
@@ -229,12 +235,28 @@ public class PrintService extends UnicastRemoteObject implements IPrintService {
 
     @Override
     public void setConfig(String tkn, String parameter, String value) throws RemoteException {
+        MethodCallLog(tkn, String.format("setConfig() called with param: %s, %s", parameter, value));
+
         if (!isTokenValid(tkn))
             return;
 
-        MethodCallLog(tkn, String.format("setConfig() called with param: %s, %s", parameter, value));
+        if (!isRunning)
+            return;
 
         config.put(parameter, value);
+    }
+
+    private boolean authenticateUser(String username, String password) throws FileNotFoundException {
+        Scanner input = new Scanner(new File(userFileName));
+        input.useDelimiter(",|\n");
+
+        while(input.hasNext()) {
+            String txtusername = input.next();
+            if (txtusername.equals(username)){
+                return BCrypt.checkpw(password,input.next());
+            }
+        }
+        return false;
     }
 
     private String generateToken(String user) {
@@ -294,10 +316,16 @@ public class PrintService extends UnicastRemoteObject implements IPrintService {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         String date = simpleDateFormat.format(new Date());
 
-        String username = getUsername(token);
-        if (username == null)
-            System.out.println("[" + date + "]: Unknown user: " + message);
+        if (token != null) {
+            String username = getUsername(token);
+            if (username == null) // Invalid token, method will not execute
+                System.out.println("[" + date + "]:[Unknown user]: " + message);
+            else
+                System.out.println("[" + date + "]:[" + username + "]: " + message);
 
-        System.out.println("[" + date + "]: " + username +": " + message);
+            return;
+        }
+
+        System.out.println("[" + date + "]:[NOT AUTHENTICATED]: " + message);
     }
 }
