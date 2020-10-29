@@ -36,6 +36,6 @@ public interface IPrintService extends Remote {
     String readConfig(String tkn, String parameter) throws RemoteException;
 
     // sets the parameter to value
-    void setConfig(String tkn, String parameter, String value) throws RemoteException;
+    String setConfig(String tkn, String parameter, String value) throws RemoteException;
 
 }

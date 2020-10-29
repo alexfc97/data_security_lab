@@ -27,9 +27,9 @@ public class PrintService extends UnicastRemoteObject implements IPrintService {
     private final String userFileName = "userconfigfile.txt";
 
     private Boolean isRunning = false;
-    private final HashMap<String, String> config = new HashMap<String, String>();
+    private final HashMap<String, String> config = new HashMap<>();
 
-    private final ArrayList<Printer> printers = new ArrayList<Printer>();
+    private final ArrayList<Printer> printers = new ArrayList<>();
 
     protected PrintService() throws RemoteException {
         super();
@@ -204,7 +204,7 @@ public class PrintService extends UnicastRemoteObject implements IPrintService {
         Printer foundPrinter = null;
 
         for (Printer p : printers) {
-            if (p.getName() == printer) {
+            if (p.getName().equals(printer)) {
                 foundPrinter = p;
                 break;
             }
@@ -234,16 +234,18 @@ public class PrintService extends UnicastRemoteObject implements IPrintService {
     }
 
     @Override
-    public void setConfig(String tkn, String parameter, String value) throws RemoteException {
+    public String setConfig(String tkn, String parameter, String value) throws RemoteException {
         MethodCallLog(tkn, String.format("setConfig() called with param: %s, %s", parameter, value));
 
         if (!isTokenValid(tkn))
-            return;
+            return ClientResponse(tkn, "Token invalid.");
 
         if (!isRunning)
-            return;
+            return ClientResponse(tkn,"Server is currently stopped.");
 
         config.put(parameter, value);
+
+        return ClientResponse(tkn,value);
     }
 
     private boolean authenticateUser(String username, String password) throws FileNotFoundException {
