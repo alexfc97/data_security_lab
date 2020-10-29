@@ -18,6 +18,14 @@ public class Server {
         Registry registry = LocateRegistry.createRegistry(7070);
         registry.rebind("print-service", new PrintService());
 
+        // Flag to create test users and store in a file
+        Boolean shouldGenerateTestUsers = true;
+
+        if (shouldGenerateTestUsers)
+            generateTestUsers();
+    }
+
+    private static void generateTestUsers() {
         User user1 = new User();
         user1.setUsername("Alexander");
         user1.setPassword(BCrypt.hashpw("ThisIsThePasswordForAlexander",BCrypt.gensalt()));

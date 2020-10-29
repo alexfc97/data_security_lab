@@ -1,0 +1,4 @@
+Alexander,$2a$10$96hE2sc7fB6lNvWqvXMOS.7EStCvgchhNxbwTf4GQ0dq0tzaRd3pW
+Roi,$2a$10$ARLl6dsdARu65yji7b8k/.goxqZfaw4rTWVatHkexP6unMspFcThm
+Florian,$2a$10$B/eAbZpxHP7AQjsonVF8KeHXds.CtqR9su.g7wo95QjvHjmwrHQci
+Mohammad,$2a$10$UvRNQTEcNkGbDOrwkUR9Wu3sI/TGBAlmYYaRRwfalrNL.AK/BmbCa
