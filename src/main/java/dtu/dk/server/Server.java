@@ -18,11 +18,7 @@ public class Server {
         Registry registry = LocateRegistry.createRegistry(7070);
         registry.rebind("print-service", new PrintService());
 
-        // Flag to create test users and store in a file
-        Boolean shouldGenerateTestUsers = true;
-
-        if (shouldGenerateTestUsers)
-            generateTestUsers();
+        generateTestUsers();
     }
 
     private static void generateTestUsers() {
